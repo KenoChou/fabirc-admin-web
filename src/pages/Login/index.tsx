@@ -19,8 +19,8 @@ export default function LoginPage() {
     try {
       setLoading(true);
       // 临时取消密码校验：允许直接登录后台查看页面
-      const mockToken = `dev-token-${Date.now()}`;
-      setAuth({ token: mockToken, username: values.username, role: values.role });
+      const token = `dev-token-${Date.now()}`;
+      setAuth({ token, username: values.username, role: values.role });
       message.success('登录成功');
       navigate('/resource-list');
     } finally {
@@ -31,7 +31,7 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#f5f5f5' }}>
       <Card title="内部管理平台登录" style={{ width: 420 }}>
-        <Typography.Paragraph type="secondary">已临时关闭密码校验，可直接进入后台查看页面。</Typography.Paragraph>
+        <Typography.Paragraph type="secondary">已临时关闭密码校验，可直接登录进入后台。</Typography.Paragraph>
         <Form layout="vertical" onFinish={onFinish} initialValues={{ role: ROLE.normal }}>
           <Form.Item label="用户名" name="username" rules={[{ required: true, message: '请输入用户名' }]}>
             <Input placeholder="请输入用户名" />
