@@ -1,13 +1,12 @@
 import { Button, Card, Form, Input, Select, Typography, message } from 'antd';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { loginApi } from '../../api/modules/auth';
 import { ROLE } from '../../constants';
 import { useAuthStore } from '../../store/auth';
 
 interface FormValues {
   username: string;
-  password: string;
+  password?: string;
   role: 'admin' | 'normal';
 }
 
@@ -19,9 +18,9 @@ export default function LoginPage() {
   const onFinish = async (values: FormValues) => {
     try {
       setLoading(true);
-      const response = await loginApi({ username: values.username, password: values.password });
-      const role = response.role ?? values.role;
-      setAuth({ token: response.token, username: response.username ?? values.username, role });
+      // 临时取消密码校验：允许直接登录后台查看页面
+      const mockToken = `dev-token-${Date.now()}`;
+      setAuth({ token: mockToken, username: values.username, role: values.role });
       message.success('登录成功');
       navigate('/resource-list');
     } finally {
@@ -32,13 +31,13 @@ export default function LoginPage() {
   return (
     <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#f5f5f5' }}>
       <Card title="内部管理平台登录" style={{ width: 420 }}>
-        <Typography.Paragraph type="secondary">登录后将获取 token 并访问 /api/v1/compute/** 接口。</Typography.Paragraph>
+        <Typography.Paragraph type="secondary">已临时关闭密码校验，可直接进入后台查看页面。</Typography.Paragraph>
         <Form layout="vertical" onFinish={onFinish} initialValues={{ role: ROLE.normal }}>
           <Form.Item label="用户名" name="username" rules={[{ required: true, message: '请输入用户名' }]}>
             <Input placeholder="请输入用户名" />
           </Form.Item>
-          <Form.Item label="密码" name="password" rules={[{ required: true, message: '请输入密码' }]}>
-            <Input.Password placeholder="请输入密码" />
+          <Form.Item label="密码（已不校验）" name="password">
+            <Input.Password placeholder="可不填写" />
           </Form.Item>
           <Form.Item label="角色（用于本地权限演示）" name="role">
             <Select
